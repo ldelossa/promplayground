@@ -5,25 +5,16 @@ services:
     image: golang:latest
     container_name: prom-server
     volumes:
-      - ".:."
-    entrypoint: ["go" "run" "*.go"]
+      - ".:/promplayground"
+    entrypoint: ["bash", "-c", "cd /promplayground; go get; go run /promplayground/cmd/server/*.go"]
     ports:
       - "8089:8089"
-
-  database:
-    image: postgres:11.5
-    container_name: prom-db
-    environment:
-      POSTGRES_USER: "prom"
-      POSTGRES_DB: "prom"
-    ports:
-      - "5434:5432"
 
   prometheus:
     container_name: prom-prometheus
     image: prom/prometheus:latest
     volumes:
-      - "./local-dev/prometheus:/etc/prometheus/"
+      - "./etc/prometheus:/etc/prometheus/"
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'

@@ -15,6 +15,7 @@ import (
 func main() {
 	var Mux http.ServeMux
 	Mux.Handle("/metrics", promhttp.Handler())
+	Mux.Handle("/rando", play.RandoHandler())
 
 	var MetricsServer = http.Server{
 		Addr:    play.ListenAddr,
